@@ -218,16 +218,14 @@ int main(void)
 
     	            HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 4030);
     	            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
-
     	            HAL_Delay(1000);
-
     	            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET); // выключаем светодиод
     	            HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 0);
 
     	            timestamp = HAL_GetTick();
     	            state = SAMPLING;
     	            break;
-
+//// ЭМ, НУ НОРМ ЛАДНОЛ
     	        case SAMPLING:
     	            if (sampleReady)
     	            {
@@ -267,6 +265,7 @@ int main(void)
     	                state = WAIT_NEXT_CYCLE;
     	                break;
     	            }
+
 
     	            case WAIT_NEXT_CYCLE:
     	                if (HAL_GetTick() - timestamp >= 30000) // ждём n сек
