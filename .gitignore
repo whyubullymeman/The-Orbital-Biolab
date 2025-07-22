@@ -1,0 +1,31 @@
+# Сборочные каталоги
+Debug/
+Release/
+build/
+
+# Конфигурации среды
+.settings/
+.project
+.cproject
+.idea/
+*.launch
+
+# Кэш и временные файлы
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.log
+
+# Файлы резервных копий
+*~
+*.bak
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
