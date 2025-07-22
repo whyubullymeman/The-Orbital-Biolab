@@ -211,33 +211,31 @@ int main(void)
     	            dataSent = 0;
     	            adcReady = 0;
     	            currentChannel = 0;
+       	            HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
+    	            HAL_TIM_Base_Start_IT(&htim2);
 
-    	            HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
+    	            HAL_Delay(100);
+
     	            HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 4030);
-    	            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);   // включаем светодиод
-    	            HAL_TIM_Base_Start_IT(&htim2);                         // начинаем таймер (АЦП будет дергаться в прерывании)
+    	            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
 
-    	            HAL_Delay(10);                                        // ждём 100 мс при включённом светодиоде
+    	            HAL_Delay(1000);
 
     	            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET); // выключаем светодиод
     	            HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 0);
 
-    	            // Продолжаем сбор ещё, например, 100 мс — потом автоматически в SAMPLING он завершится
     	            timestamp = HAL_GetTick();
     	            state = SAMPLING;
     	            break;
 
-    	            case SAMPLING:
-
-    	                if (sampleReady)
-    	                {
-    	                    HAL_TIM_Base_Stop_IT(&htim2);
-    	                    timestamp = HAL_GetTick();
-    	                    state = WAIT_BEFORE_SEND;
-    	                }
-    	                break;
-
-
+    	        case SAMPLING:
+    	            if (sampleReady)
+    	            {
+    	                HAL_TIM_Base_Stop_IT(&htim2);
+    	                timestamp = HAL_GetTick();
+    	                state = WAIT_BEFORE_SEND;
+    	            }
+    	            break;
 
     	            case WAIT_BEFORE_SEND:
 
@@ -269,7 +267,6 @@ int main(void)
     	                state = WAIT_NEXT_CYCLE;
     	                break;
     	            }
-
 
     	            case WAIT_NEXT_CYCLE:
     	                if (HAL_GetTick() - timestamp >= 30000) // ждём n сек
@@ -493,9 +490,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 71;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 719;
+  htim2.Init.Period = 99;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
